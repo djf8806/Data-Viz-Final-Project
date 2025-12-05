@@ -2,6 +2,7 @@ library(tidyverse)
 library(janitor)
 library(lehdr)
 library(tidycensus)
+library(sf)
 
 # Download LODES data (origin-destination) for New York
 lodes <- grab_lodes(
@@ -51,4 +52,4 @@ census_lodes <- lodes_tracts %>%
   filter(str_detect(name, "Bronx County|Queens County|Kings County|New York County|Richmond County"))
 
 # Save as SHP
-st_write(census_lodes
+st_write(census_lodes, "r_output/census_lodes.shp")
