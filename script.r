@@ -53,3 +53,39 @@ census_lodes <- lodes_tracts %>%
 
 # Save as SHP
 st_write(census_lodes, "r_output/census_lodes.shp")
+
+## ---------------------------------------------------------------
+  
+library(lubridate)
+
+# clean ferry ridership data 
+
+ferry <- read_csv("r_data/NYC_Ferry_Ridership_20251209.csv") %>% 
+  clean_names() 
+
+# columns now: date, hour, route, direction, stop, boardings, type_day
+
+#categorize data using mutate
+ferry <- ferry %>% 
+  mutate(
+    date      = mdy(date),              # parse "10/31/2025" etc.
+    hour      = as.integer(hour),       # 0–23
+    month     = floor_date(date, "month"),
+    weekday   = wday(date, label = TRUE),      # Mon, Tue, ...
+    is_weekend = weekday %in% c("Sat", "Sun")  # TRUE/FALSE
+  )
+
+#Create peak, midday, and evening travel categories 
+ferry <- ferry %>% 
+  mutate(
+    time_period = case_when(
+      hour >= 6  & hour < 10 ~ "AM peak",
+      hour >= 16 & hour < 19 ~ "PM peak",
+      hour >= 10 & hour < 16 ~ "Midday",
+      hour >= 19 & hour < 23 ~ "Evening",
+      TRUE                  ~ "Overnight"
+    )
+  )
+
+
+ 
