@@ -59,8 +59,7 @@ st_write(census_lodes, "r_output/census_lodes.shp")
 library(lubridate)
 
 # clean ferry ridership data 
-
-ferry <- read_csv("r_data/NYC_Ferry_Ridership_20251209.csv") %>% 
+ferry <- read_csv("r_data/NYC_Ferry_Ridership_2022.csv") %>% 
   clean_names() 
 
 # columns now: date, hour, route, direction, stop, boardings, type_day
@@ -68,12 +67,11 @@ ferry <- read_csv("r_data/NYC_Ferry_Ridership_20251209.csv") %>%
 #categorize data using mutate
 ferry <- ferry %>% 
   mutate(
-    date      = mdy(date),              # parse "10/31/2025" etc.
+    date      = mdy(date),              
     hour      = as.integer(hour),       # 0–23
     month     = floor_date(date, "month"),
-    weekday   = wday(date, label = TRUE),      # Mon, Tue, ...
-    is_weekend = weekday %in% c("Sat", "Sun")  # TRUE/FALSE
-  )
+    weekday   = wday(date, label = TRUE),     
+    is_weekend = weekday %in% c("Sat", "Sun"))
 
 #Create peak, midday, and evening travel categories 
 ferry <- ferry %>% 
@@ -83,9 +81,38 @@ ferry <- ferry %>%
       hour >= 16 & hour < 19 ~ "PM peak",
       hour >= 10 & hour < 16 ~ "Midday",
       hour >= 19 & hour < 23 ~ "Evening",
-      TRUE                  ~ "Overnight"
-    )
-  )
+      TRUE                  ~ "Overnight"))
+
+# Classify “commute vs non-commute” times 
+ferry <- ferry %>% 
+  mutate(
+    commute_period = time_period %in% c("AM peak", "PM peak"),
+    commute_type = if_else(!is_weekend & commute_period,
+                           "Commute",
+                           "Non-commute"))
+
+# Summarize annual totals per stop
+ferry_stop_totals <- ferry %>% 
+  group_by(stop) %>% 
+  summarize(
+    total_boardings = sum(boardings, na.rm = TRUE),
+    commute_boardings = sum(boardings[commute_type == "Commute"], na.rm = TRUE),
+    noncommute_boardings = sum(boardings[commute_type == "Non-commute"], na.rm = TRUE),
+    weekday_boardings = sum(boardings[!is_weekend], na.rm = TRUE),
+    weekend_boardings = sum(boardings[is_weekend], na.rm = TRUE),
+    .groups = "drop")
+
+write_csv(ferry_stop_totals, "r_output/ferry_stop_totals_2022.csv")
+
+# Summarize stop x time_period (To see which stops are commuter vs midday)
+ferry_stop_period <- ferry %>% 
+  group_by(stop, time_period) %>% 
+  summarize(
+    boardings = sum(boardings, na.rm = TRUE),
+    .groups = "drop")
+
+write_csv(ferry_stop_period, "r_output/ferry_stop_timeperiod_2022.csv")
+
 
 
  
