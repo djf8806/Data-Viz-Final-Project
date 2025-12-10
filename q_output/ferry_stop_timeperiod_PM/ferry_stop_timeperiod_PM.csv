@@ -1,0 +1,120 @@
+stop,time_period,period_hrs,boardings,avg_hourly_boardings
+Astoria,AM peak,"4","71744",17936
+Astoria,Evening,"4","15254",3813.5
+Astoria,Midday,"6","89130",14855
+Astoria,Overnight,"7","0",0
+Astoria,PM peak,"3","43819",14606.3333333333
+Atlantic Ave/BBP Pier 6,AM peak,"4","21124",5281
+Atlantic Ave/BBP Pier 6,Evening,"4","9803",2450.75
+Atlantic Ave/BBP Pier 6,Midday,"6","48051",8008.5
+Atlantic Ave/BBP Pier 6,PM peak,"3","25259",8419.66666666667
+Battery Park City/Vesey St.,AM peak,"4","6566",1641.5
+Battery Park City/Vesey St.,Evening,"4","14483",3620.75
+Battery Park City/Vesey St.,Midday,"6","35526",5921
+Battery Park City/Vesey St.,PM peak,"3","40799",13599.6666666667
+Bay Ridge,AM peak,"4","12526",3131.5
+Bay Ridge,Evening,"4","7996",1999
+Bay Ridge,Midday,"6","52524",8754
+Bay Ridge,Overnight,"7","0",0
+Bay Ridge,PM peak,"3","21398",7132.66666666667
+Brooklyn Navy Yard,AM peak,"4","31008",7752
+Brooklyn Navy Yard,Evening,"4","10998",2749.5
+Brooklyn Navy Yard,Midday,"6","38144",6357.33333333333
+Brooklyn Navy Yard,PM peak,"3","35312",11770.6666666667
+Corlears Hook,AM peak,"4","4617",1154.25
+Corlears Hook,Evening,"4","3511",877.75
+Corlears Hook,Midday,"6","16388",2731.33333333333
+Corlears Hook,PM peak,"3","8544",2848
+Dumbo/BBP Pier 1,Overnight,"7","0",0
+Dumbo/Fulton Ferry,AM peak,"4","33369",8342.25
+Dumbo/Fulton Ferry,Evening,"4","98604",24651
+Dumbo/Fulton Ferry,Midday,"6","256748",42791.3333333333
+Dumbo/Fulton Ferry,Overnight,"7","0",0
+Dumbo/Fulton Ferry,PM peak,"3","180244",60081.3333333333
+East 34th Street,AM peak,"4","70588",17647
+East 34th Street,Evening,"4","117696",29424
+East 34th Street,Midday,"6","297757",49626.1666666667
+East 34th Street,Overnight,"7","674",96.2857142857143
+East 34th Street,PM peak,"3","291123",97041
+East 90th St,AM peak,"4","51474",12868.5
+East 90th St,Evening,"4","35952",8988
+East 90th St,Midday,"6","135758",22626.3333333333
+East 90th St,Overnight,"7","438",62.5714285714286
+East 90th St,PM peak,"3","97142",32380.6666666667
+Ferry Point Park,AM peak,"4","28745",7186.25
+Ferry Point Park,Evening,"4","4847",1211.75
+Ferry Point Park,Midday,"6","27854",4642.33333333333
+Ferry Point Park,Overnight,"7","4357",622.428571428571
+Ferry Point Park,PM peak,"3","13035",4345
+Gov. Island/Yankee Pier,AM peak,"4","618",154.5
+Gov. Island/Yankee Pier,Midday,"6","44058",7343
+Gov. Island/Yankee Pier,Overnight,"7","0",0
+Gov. Island/Yankee Pier,PM peak,"3","36249",12083
+Governors Island,Overnight,"7","0",0
+Greenpoint,AM peak,"4","6493",1623.25
+Greenpoint,Evening,"4","751",187.75
+Greenpoint,Midday,"6","5458",909.666666666667
+Greenpoint,PM peak,"3","1904",634.666666666667
+Hunters Point South,AM peak,"4","57101",14275.25
+Hunters Point South,Evening,"4","24919",6229.75
+Hunters Point South,Midday,"6","105336",17556
+Hunters Point South,Overnight,"7","0",0
+Hunters Point South,PM peak,"3","53619",17873
+Long Island City,AM peak,"4","64896",16224
+Long Island City,Evening,"4","26718",6679.5
+Long Island City,Midday,"6","85125",14187.5
+Long Island City,Overnight,"7","0",0
+Long Island City,PM peak,"3","46008",15336
+Midtown West,AM peak,"4","14190",3547.5
+Midtown West,Evening,"4","21546",5386.5
+Midtown West,Midday,"6","44616",7436
+Midtown West,PM peak,"3","49260",16420
+North Williamsburg,AM peak,"4","109888",27472
+North Williamsburg,Evening,"4","45040",11260
+North Williamsburg,Midday,"6","173113",28852.1666666667
+North Williamsburg,Overnight,"7","0",0
+North Williamsburg,PM peak,"3","93329",31109.6666666667
+Red Hook/Atlantic Basin,AM peak,"4","19374",4843.5
+Red Hook/Atlantic Basin,Evening,"4","9339",2334.75
+Red Hook/Atlantic Basin,Midday,"6","37428",6238
+Red Hook/Atlantic Basin,Overnight,"7","0",0
+Red Hook/Atlantic Basin,PM peak,"3","19294",6431.33333333333
+Rockaway,AM peak,"4","62422",15605.5
+Rockaway,Evening,"4","38460",9615
+Rockaway,Midday,"6","108790",18131.6666666667
+Rockaway,Overnight,"7","5690",812.857142857143
+Rockaway,PM peak,"3","91561",30520.3333333333
+Roosevelt Island,AM peak,"4","33265",8316.25
+Roosevelt Island,Evening,"4","17726",4431.5
+Roosevelt Island,Midday,"6","74006",12334.3333333333
+Roosevelt Island,Overnight,"7","0",0
+Roosevelt Island,PM peak,"3","41908",13969.3333333333
+Soundview,AM peak,"4","71889",17972.25
+Soundview,Evening,"4","7836",1959
+Soundview,Midday,"6","54087",9014.5
+Soundview,Overnight,"7","11982",1711.71428571429
+Soundview,PM peak,"3","23591",7863.66666666667
+South Williamsburg,AM peak,"4","42376",10594
+South Williamsburg,Evening,"4","15727",3931.75
+South Williamsburg,Midday,"6","78356",13059.3333333333
+South Williamsburg,Overnight,"7","0",0
+South Williamsburg,PM peak,"3","36630",12210
+St. George,AM peak,"4","55400",13850
+St. George,Evening,"4","16628",4157
+St. George,Midday,"6","66870",11145
+St. George,PM peak,"3","33083",11027.6666666667
+Stuyvesant Cove,AM peak,"4","17754",4438.5
+Stuyvesant Cove,Evening,"4","6049",1512.25
+Stuyvesant Cove,Midday,"6","29713",4952.16666666667
+Stuyvesant Cove,Overnight,"7","300",42.8571428571429
+Stuyvesant Cove,PM peak,"3","17834",5944.66666666667
+Sunset Park/BAT,AM peak,"4","26182",6545.5
+Sunset Park/BAT,Evening,"4","8237",2059.25
+Sunset Park/BAT,Midday,"6","62667",10444.5
+Sunset Park/BAT,Overnight,"7","827",118.142857142857
+Sunset Park/BAT,PM peak,"3","30176",10058.6666666667
+Wall St/Pier 11,AM peak,"4","83267",20816.75
+Wall St/Pier 11,Evening,"4","195541",48885.25
+Wall St/Pier 11,Midday,"6","528478",88079.6666666667
+Wall St/Pier 11,Overnight,"7","137",19.5714285714286
+Wall St/Pier 11,PM peak,"3","489603",163201
