@@ -326,19 +326,18 @@ ggplot(comparison_period_fixed,
     ) ) +
   
   scale_y_continuous(
-    labels = comma,
+    labels = scales::comma,
     expand = expansion(mult = c(0, 0.15)) ) +
   
   labs(
-    title = "Average Hourly Ridership for 
-    Subway Stations and Ferry Landings",
-    subtitle = "Ferries attract little commuter traffic compared with nearby 
-    subway stations, underscoring their limited role in peak-hour travel.",
+      title = "Average Hourly Ridership for \nNYC Ferry Landings and nearby Subway Stations",
+      subtitle = "Ferries attract little commuter traffic compared to \nnearby subway stations, limiting their role in peak-hour travel.",
     x = "",
     y = "Average hourly ridership",
     fill = NULL,
     caption = "Sources: NYC Ferry Ridership (2022); MTA Subway Hourly Ridership (2022)"
     ) +
+  coord_cartesian(clip = "off") + 
   
   theme_minimal(base_size = 14) +
   theme(
@@ -349,23 +348,29 @@ ggplot(comparison_period_fixed,
     # thinner, lighter axis lines + ticks
     axis.line.x = element_line(color = "gray60", linewidth = 0.3),
     axis.line.y = element_line(color = "gray60", linewidth = 0.3),
-    axis.ticks = element_line(color = "gray60", linewidth = 0.3),
+    axis.ticks = element_line(color = "gray60", linewidth = 0.03),
     axis.ticks.length = unit(0.12, "cm"),
     
     # black text everywhere
     text = element_text(color = "black"),
     axis.title = element_text(color = "black"),
     axis.text = element_text(color = "black"),
-    plot.title = element_text(color = "black", face = "bold"),
-    plot.subtitle = element_text(color = "black"),
     
-    # legend at bottom, left-aligned
-    legend.position = "bottom",
-    legend.justification = "left",
+    # alignment
+    plot.title.position = "plot",
+    plot.title = element_text(color = "black", face = "bold", hjust = 0.5, lineheight = 1.1),
+    plot.subtitle = element_text(color = "black", hjust = 0.5, lineheight = 1.1),
+    plot.caption = element_text(size = 9, color = "gray30", hjust = 1.0),
+    
+    # legend alignment
+    legend.position = c(0, 1),
+    legend.justification = c(0, 1),
     legend.text = element_text(size = 12, color = "black"),
+    legend.box.margin = margin(5, 0, 10, 0),
     
     # more space so nothing feels cramped
-    plot.margin = margin(t = 20, r = 20, b = 15, l = 20) )
+    plot.margin = margin(t = 30, r = 20, b = 20, l = 20)
+  )
 
 
 
@@ -394,6 +399,89 @@ ferry_by_landing <- ferry %>%
     ferry_noncommute = sum(boardings[commute_type == "Non-commute"], na.rm = TRUE),
     .groups = "drop"
   )
+
+# table to show all numbers 
+
+# 1) Annual ferry totals per landing
+ferry_totals <- read_csv("r_output/ferry_stop_totals_2022.csv") %>%
+  clean_names()
+# columns (from your script): stop, total_boardings, commute_boardings, noncommute_boardings,
+#                             weekday_boardings, weekend_boardings
+
+# 2) Ferry ridership by time period per landing
+ferry_period <- read_csv("r_output/ferry_stop_timeperiod_2022.csv") %>%
+  clean_names()
+# columns: stop, time_period, period_hrs, boardings, avg_hourly_boardings
+
+# 3) LODES jobs + workers per landing
+lodes_by_landing <- read_csv("q_output//LODES_by_landing/LODES_by_landing.csv") %>%
+  clean_names()
+lodes_by_landing_clean <- lodes_by_landing %>%
+  rename(
+    stop            = new_field,
+    residents_15m   = resdnts,
+    workers_15m     = workers,
+    population_15m  = popltn,    # note the underscore
+    hh_income       = hosh_ncm   # note the underscore
+  ) %>%
+  select(stop, residents_15m, workers_15m, population_15m, hh_income)
+
+
+# pivot time-period data wide to get one column per period
+ferry_hourly_wide <- ferry_period %>%
+  select(stop, time_period, avg_hourly_boardings) %>%
+  mutate(
+    time_period = factor(
+      time_period,
+      levels = c("AM peak", "Midday", "PM peak", "Evening", "Overnight")
+    )
+  ) %>%
+  pivot_wider(
+    names_from  = time_period,
+    values_from = avg_hourly_boardings,
+    names_prefix = "hourly_"
+  )%>%
+  clean_names()
+
+
+#clean / rename LODES by landing 
+lodes_by_landing_clean <- lodes_by_landing %>%
+  rename(
+    stop            = new_field,   # landing name
+    residents_15m   = resdnts,     # residents within 15-minute walk
+    workers_15m     = workers,     # people who WORK within 15-minute walk (jobs)
+    population_15m  = popltn,      # total population (if different from residents)
+    hh_income       = hosh_ncm     # household income
+  ) %>%
+  select(stop, residents_15m, workers_15m, population_15m, hh_income)
+
+
+landing_summary <- ferry_totals %>%
+  left_join(ferry_hourly_wide, by = "stop") %>%
+  left_join(lodes_by_landing_clean, by = "stop") %>%
+  mutate(
+    commute_share        = commute_boardings / total_boardings,
+    weekend_share        = weekend_boardings / total_boardings,
+    peak_hourly          = pmax(hourly_am_peak, hourly_pm_peak, na.rm = TRUE),
+    midday_hourly        = hourly_midday,
+    peak_to_midday_ratio = peak_hourly / midday_hourly
+  )
+
+
+write_csv(landing_summary, "r_output/landing_level_summary_2022.csv")
+
+landing_summary %>%
+  select(
+    stop,
+    total_boardings,
+    hourly_am_peak,
+    hourly_midday,
+    commute_share,
+    workers_15m
+  ) %>%
+  arrange(desc(total_boardings)) %>%
+  write_csv("r_output/landing_summary_for_slides.csv")
+
 
 #----------------
 
