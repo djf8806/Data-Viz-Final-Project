@@ -1,11 +1,11 @@
-time_period,mode,avg_ridership
-AM peak,avg_ferry,39875.04
-AM peak,avg_subway,610198.40625
-Evening,avg_ferry,31402.541666666664
-Evening,avg_subway,494761.875
-Midday,avg_ferry,99839.24
-Midday,avg_subway,1105104.59375
-Overnight,avg_ferry,1220.25
-Overnight,avg_subway,136046.9375
-PM peak,avg_ferry,72828.95999999999
-PM peak,avg_subway,1067990.59375
+time_period,mode,avg_ridership,hrs,avg_hourly_ridership
+AM peak,avg_ferry,39875.04,4,9968.76
+AM peak,avg_subway,610198.40625,4,152549.6015625
+Evening,avg_ferry,31402.541666666664,4,7850.635416666666
+Evening,avg_subway,494761.875,4,123690.46875
+Midday,avg_ferry,99839.24,6,16639.873333333333
+Midday,avg_subway,1105104.59375,6,184184.09895833334
+Overnight,avg_ferry,1220.25,7,174.32142857142858
+Overnight,avg_subway,136046.9375,7,19435.276785714286
+PM peak,avg_ferry,72828.95999999999,3,24276.319999999996
+PM peak,avg_subway,1067990.59375,3,355996.8645833333

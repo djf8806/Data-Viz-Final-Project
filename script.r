@@ -81,7 +81,15 @@ ferry <- ferry %>%
       hour >= 16 & hour < 19 ~ "PM peak",
       hour >= 10 & hour < 16 ~ "Midday",
       hour >= 19 & hour < 23 ~ "Evening",
-      TRUE                  ~ "Overnight"))
+      TRUE                  ~ "Overnight"),
+    period_hrs = case_when(
+      time_period == "AM peak" ~ 4,
+      time_period == "PM peak" ~ 3,
+      time_period == "Midday" ~ 6,
+      time_period == "Evening" ~ 4,
+      time_period == "Overnight" ~ 7
+      )
+    )
 
 # Classify “commute vs non-commute” times 
 ferry <- ferry %>% 
@@ -106,10 +114,11 @@ write_csv(ferry_stop_totals, "r_output/ferry_stop_totals_2022.csv")
 
 # Summarize stop x time_period (To see which stops are commuter vs midday)
 ferry_stop_period <- ferry %>% 
-  group_by(stop, time_period) %>% 
+  group_by(stop, time_period, period_hrs) %>% 
   summarize(
     boardings = sum(boardings, na.rm = TRUE),
-    .groups = "drop")
+    .groups = "drop") %>% 
+  mutate(avg_hourly_boardings = boardings/period_hrs)
 
 #Save as CSV
 write_csv(ferry_stop_period, "r_output/ferry_stop_timeperiod_2022.csv")
@@ -118,7 +127,7 @@ write_csv(ferry_stop_period, "r_output/ferry_stop_timeperiod_2022.csv")
 #--------------
 
 #Import previously-cleaned subway ridership data (see Q procedure file for R code)
-subway <- read_csv("r_output/subway_ridership_15min_walk_ferry_2022.csv") %>% 
+subway <- read_csv("r_data/subway_ridership_15min_walk_ferry_2022.csv") %>% 
   clean_names() 
 
 #categorize data using mutate
@@ -136,11 +145,18 @@ mutate(
 subway <- subway %>%
   mutate(
     time_period = case_when(
-      hour >= 6  & hour < 10 ~ "AM peak", #4 hrs
-      hour >= 16 & hour < 19 ~ "PM peak", #3 hrs
-      hour >= 10 & hour < 16 ~ "Midday", #6
-      hour >= 19 & hour < 23 ~ "Evening", #4 hrs
-      TRUE                  ~ "Overnight" ), #7 hrs
+      hour >= 6  & hour < 10 ~ "AM peak",
+      hour >= 16 & hour < 19 ~ "PM peak",
+      hour >= 10 & hour < 16 ~ "Midday",
+      hour >= 19 & hour < 23 ~ "Evening",
+      TRUE                  ~ "Overnight" ),
+    period_hrs = case_when(
+      time_period == "AM peak" ~ 4,
+      time_period == "PM peak" ~ 3,
+      time_period == "Midday" ~ 6,
+      time_period == "Evening" ~ 4,
+      time_period == "Overnight" ~ 7
+    ),
     commute_period = time_period %in% c("AM peak", "PM peak"),
     commute_type = if_else(!is_weekend & commute_period,
                            "Commute", "Non-commute") )
@@ -160,10 +176,11 @@ write_csv(subway_station_totals, "r_output/subway_station_totals_2022.csv")
 
 # Summarize stop x time_period (To see which stops are commuter vs midday)
 subway_stop_period <- subway %>%
-  group_by(station_complex, time_period) %>%
+  group_by(station_complex, time_period, period_hrs) %>%
   summarize(
     ridership = sum(ridership, na.rm = TRUE),
-    .groups = "drop")
+    .groups = "drop") %>% 
+  mutate(avg_hourly_ridership = ridership/period_hrs)
 
 #Save as CSV
 write_csv(subway_stop_period, "r_output/subway_stop_timeperiod_2022.csv")
@@ -172,10 +189,12 @@ write_csv(subway_stop_period, "r_output/subway_stop_timeperiod_2022.csv")
 
 # Ferry summary (by time period, weekday/weekend)
 ferry_summary_period <- ferry %>%
-  group_by(time_period) %>%
+  group_by(time_period, period_hrs) %>%
   summarize(
     total = sum(boardings, na.rm = TRUE)) %>%
-  mutate(mode = "Ferry")
+  mutate(mode = "Ferry",
+         avg_hourly_ridership = total/period_hrs
+         )
 
 ferry_summary_weektype <- ferry %>%
   group_by(is_weekend) %>%
@@ -189,7 +208,7 @@ ferry_avg_by_period <- ferry %>%
   summarise(total = sum(boardings, na.rm = TRUE)) %>%
   ungroup() %>%
   group_by(time_period) %>%
-  summarise(avg_ferry = mean(total))
+  summarise(avg_ferry = mean(total)) 
 
 #Average ridership per ferry landing by commute vs non-commute
 ferry_avg_commute <- ferry %>%
@@ -201,10 +220,12 @@ ferry_avg_commute <- ferry %>%
 
 # Subway summary (by time period, weekday/weekend)
 subway_summary_period <- subway %>%
-  group_by(time_period) %>%
+  group_by(time_period, period_hrs) %>%
   summarize(
     total = sum(ridership, na.rm = TRUE) ) %>%
-  mutate(mode = "Subway")
+  mutate(mode = "Subway",
+         avg_hourly_ridership = total/period_hrs
+  )
 
 subway_summary_weektype <- subway %>%
   group_by(is_weekend) %>%
@@ -215,8 +236,9 @@ subway_summary_weektype <- subway %>%
 #Average ridership per subway station by time period
   #per station, per period totals
 subway_period_station_totals <- subway %>%
-  group_by(station_complex_id, time_period) %>%
-  summarize(total = sum(ridership, na.rm = TRUE))
+  group_by(station_complex_id, time_period, period_hrs) %>%
+  summarize(total = sum(ridership, na.rm = TRUE)) %>% 
+  mutate(avg_hourly_ridership = total/period_hrs)
   
   #avg across stations
 subway_avg_by_period <- subway_period_station_totals %>%
