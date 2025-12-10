@@ -1,0 +1,161 @@
+station_complex,time_period,ridership
+1 Av (L),AM peak,921414
+1 Av (L),Evening,1058671
+1 Av (L),Midday,1707019
+1 Av (L),Overnight,347092
+1 Av (L),PM peak,1334531
+21 St (G),AM peak,50915
+21 St (G),Evening,65297
+21 St (G),Midday,105447
+21 St (G),Overnight,19599
+21 St (G),PM peak,136842
+33 St (6),AM peak,711978
+33 St (6),Evening,796081
+33 St (6),Midday,1632748
+33 St (6),Overnight,204059
+33 St (6),PM peak,1521719
+34 St-Hudson Yards (7),AM peak,316538
+34 St-Hudson Yards (7),Evening,915776
+34 St-Hudson Yards (7),Midday,1362036
+34 St-Hudson Yards (7),Overnight,212165
+34 St-Hudson Yards (7),PM peak,1571431
+"59 St (N,R)",AM peak,970467
+"59 St (N,R)",Evening,190102
+"59 St (N,R)",Midday,782310
+"59 St (N,R)",Overnight,140459
+"59 St (N,R)",PM peak,537475
+86 St (Q),AM peak,1262130
+86 St (Q),Evening,674609
+86 St (Q),Midday,1578869
+86 St (Q),Overnight,123002
+86 St (Q),PM peak,1237298
+96 St (Q),AM peak,1016870
+96 St (Q),Evening,367878
+96 St (Q),Midday,1241900
+96 St (Q),Overnight,114214
+96 St (Q),PM peak,832281
+"Beach 105 St (A,S)",AM peak,14621
+"Beach 105 St (A,S)",Evening,7308
+"Beach 105 St (A,S)",Midday,16836
+"Beach 105 St (A,S)",Overnight,4387
+"Beach 105 St (A,S)",PM peak,16023
+"Beach 98 St (A,S)",AM peak,28567
+"Beach 98 St (A,S)",Evening,8594
+"Beach 98 St (A,S)",Midday,31116
+"Beach 98 St (A,S)",Overnight,8286
+"Beach 98 St (A,S)",PM peak,18093
+Bedford Av (L),AM peak,1355859
+Bedford Av (L),Evening,1437312
+Bedford Av (L),Midday,2203262
+Bedford Av (L),Overnight,500650
+Bedford Av (L),PM peak,1737844
+"Bowling Green (4,5)",AM peak,723652
+"Bowling Green (4,5)",Evening,430049
+"Bowling Green (4,5)",Midday,1443983
+"Bowling Green (4,5)",Overnight,142715
+"Bowling Green (4,5)",PM peak,1594395
+"Broad St (J,Z)",AM peak,70077
+"Broad St (J,Z)",Evening,148357
+"Broad St (J,Z)",Midday,337660
+"Broad St (J,Z)",Overnight,46049
+"Broad St (J,Z)",PM peak,453954
+"Chambers St (1,2,3)",AM peak,334680
+"Chambers St (1,2,3)",Evening,536289
+"Chambers St (1,2,3)",Midday,1121768
+"Chambers St (1,2,3)",Overnight,107815
+"Chambers St (1,2,3)",PM peak,1172714
+"Chambers St (A,C)/WTC (E)/Park Pl (2,3)/Cortlandt (R,W)",AM peak,1239009
+"Chambers St (A,C)/WTC (E)/Park Pl (2,3)/Cortlandt (R,W)",Evening,1408565
+"Chambers St (A,C)/WTC (E)/Park Pl (2,3)/Cortlandt (R,W)",Midday,3303260
+"Chambers St (A,C)/WTC (E)/Park Pl (2,3)/Cortlandt (R,W)",Overnight,311874
+"Chambers St (A,C)/WTC (E)/Park Pl (2,3)/Cortlandt (R,W)",PM peak,3940745
+"Clark St (2,3)",AM peak,166056
+"Clark St (2,3)",Evening,154033
+"Clark St (2,3)",Midday,284903
+"Clark St (2,3)",Overnight,27137
+"Clark St (2,3)",PM peak,211101
+"Court Sq (E,G,M,7)",AM peak,903345
+"Court Sq (E,G,M,7)",Evening,569625
+"Court Sq (E,G,M,7)",Midday,1494936
+"Court Sq (E,G,M,7)",Overnight,167717
+"Court Sq (E,G,M,7)",PM peak,1317238
+"Court St (R)/Borough Hall (2,3,4,5)",AM peak,935488
+"Court St (R)/Borough Hall (2,3,4,5)",Evening,660729
+"Court St (R)/Borough Hall (2,3,4,5)",Midday,2018237
+"Court St (R)/Borough Hall (2,3,4,5)",Overnight,141899
+"Court St (R)/Borough Hall (2,3,4,5)",PM peak,1736205
+"Fulton St (A,C,J,Z,2,3,4,5)",AM peak,2316513
+"Fulton St (A,C,J,Z,2,3,4,5)",Evening,2240718
+"Fulton St (A,C,J,Z,2,3,4,5)",Midday,4506314
+"Fulton St (A,C,J,Z,2,3,4,5)",Overnight,571731
+"Fulton St (A,C,J,Z,2,3,4,5)",PM peak,5279794
+Greenpoint Av (G),AM peak,502892
+Greenpoint Av (G),Evening,299019
+Greenpoint Av (G),Midday,655189
+Greenpoint Av (G),Overnight,77787
+Greenpoint Av (G),PM peak,559553
+"High St (A,C)",AM peak,345608
+"High St (A,C)",Evening,394358
+"High St (A,C)",Midday,699271
+"High St (A,C)",Overnight,59898
+"High St (A,C)",PM peak,653709
+Hunters Point Av (7),AM peak,315596
+Hunters Point Av (7),Evening,65380
+Hunters Point Av (7),Midday,283860
+Hunters Point Av (7),Overnight,56958
+Hunters Point Av (7),PM peak,330054
+"Marcy Av (M,J,Z)",AM peak,584380
+"Marcy Av (M,J,Z)",Evening,392227
+"Marcy Av (M,J,Z)",Midday,814570
+"Marcy Av (M,J,Z)",Overnight,141512
+"Marcy Av (M,J,Z)",PM peak,613645
+Rector St (1),AM peak,265285
+Rector St (1),Evening,172432
+Rector St (1),Midday,521005
+Rector St (1),Overnight,42620
+Rector St (1),PM peak,429023
+"Rector St (R,W)",AM peak,151717
+"Rector St (R,W)",Evening,110855
+"Rector St (R,W)",Midday,345840
+"Rector St (R,W)",Overnight,27314
+"Rector St (R,W)",PM peak,314266
+"Rockaway Park-Beach 116 St (A,S)",AM peak,41940
+"Rockaway Park-Beach 116 St (A,S)",Evening,19423
+"Rockaway Park-Beach 116 St (A,S)",Midday,47585
+"Rockaway Park-Beach 116 St (A,S)",Overnight,13788
+"Rockaway Park-Beach 116 St (A,S)",PM peak,32571
+Roosevelt Island (F),AM peak,497212
+Roosevelt Island (F),Evening,206147
+Roosevelt Island (F),Midday,647000
+Roosevelt Island (F),Overnight,51283
+Roosevelt Island (F),PM peak,376707
+"South Ferry (1)/Whitehall St (R,W)",AM peak,1061769
+"South Ferry (1)/Whitehall St (R,W)",Evening,577364
+"South Ferry (1)/Whitehall St (R,W)",Midday,1710117
+"South Ferry (1)/Whitehall St (R,W)",Overnight,237233
+"South Ferry (1)/Whitehall St (R,W)",PM peak,1617088
+Vernon Blvd-Jackson Av (7),AM peak,942859
+Vernon Blvd-Jackson Av (7),Evening,391056
+Vernon Blvd-Jackson Av (7),Midday,997615
+Vernon Blvd-Jackson Av (7),Overnight,113351
+Vernon Blvd-Jackson Av (7),PM peak,694743
+WTC Cortlandt (1),AM peak,423698
+WTC Cortlandt (1),Evening,275276
+WTC Cortlandt (1),Midday,833577
+WTC Cortlandt (1),Overnight,63126
+WTC Cortlandt (1),PM peak,789306
+"Wall St (2,3)",AM peak,364196
+"Wall St (2,3)",Evening,437503
+"Wall St (2,3)",Midday,917366
+"Wall St (2,3)",Overnight,100098
+"Wall St (2,3)",PM peak,1278565
+"Wall St (4,5)",AM peak,394528
+"Wall St (4,5)",Evening,342645
+"Wall St (4,5)",Midday,897734
+"Wall St (4,5)",Overnight,87243
+"Wall St (4,5)",PM peak,1001086
+York St (F),AM peak,296490
+York St (F),Evening,478702
+York St (F),Midday,820014
+York St (F),Overnight,90441
+York St (F),PM peak,835700

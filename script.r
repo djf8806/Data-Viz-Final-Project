@@ -111,8 +111,192 @@ ferry_stop_period <- ferry %>%
     boardings = sum(boardings, na.rm = TRUE),
     .groups = "drop")
 
+#Save as CSV
 write_csv(ferry_stop_period, "r_output/ferry_stop_timeperiod_2022.csv")
 
 
+#--------------
 
- 
+#Import previously-cleaned subway ridership data (see Q procedure file for R code)
+subway <- read_csv("r_output/subway_ridership_15min_walk_ferry_2022.csv") %>% 
+  clean_names() 
+
+#categorize data using mutate
+subway <- subway %>%
+mutate(
+  transit_timestamp = mdy_hms(transit_timestamp),
+  
+  date = as_date(transit_timestamp),
+  hour = hour(transit_timestamp),
+  month = floor_date(date, "month"),
+  weekday = wday(date, label = TRUE),
+  is_weekend = weekday %in% c("Sat", "Sun"))
+
+#Create peak, midday, and evening travel categories and classify “commute vs non-commute” times 
+subway <- subway %>%
+  mutate(
+    time_period = case_when(
+      hour >= 6  & hour < 10 ~ "AM peak",
+      hour >= 16 & hour < 19 ~ "PM peak",
+      hour >= 10 & hour < 16 ~ "Midday",
+      hour >= 19 & hour < 23 ~ "Evening",
+      TRUE                  ~ "Overnight" ),
+    commute_period = time_period %in% c("AM peak", "PM peak"),
+    commute_type = if_else(!is_weekend & commute_period,
+                           "Commute", "Non-commute") )
+
+# Summarize annual totals per stop
+subway_station_totals <- subway %>% 
+  group_by(station_complex_id, station_complex) %>% 
+  summarize(
+    total_ridership       = sum(ridership, na.rm = TRUE),
+    commute_ridership     = sum(ridership[commute_type == "Commute"], na.rm = TRUE),
+    noncommute_ridership  = sum(ridership[commute_type == "Non-commute"], na.rm = TRUE),
+    weekday_ridership     = sum(ridership[!is_weekend], na.rm = TRUE),
+    weekend_ridership     = sum(ridership[is_weekend], na.rm = TRUE),
+    .groups = "drop")
+
+write_csv(subway_station_totals, "r_output/subway_station_totals_2022.csv")
+
+# Summarize stop x time_period (To see which stops are commuter vs midday)
+subway_stop_period <- subway %>%
+  group_by(station_complex, time_period) %>%
+  summarize(
+    ridership = sum(ridership, na.rm = TRUE),
+    .groups = "drop")
+
+#Save as CSV
+write_csv(subway_stop_period, "r_output/subway_stop_timeperiod_2022.csv")
+
+#---- summaries, analysis & charts 
+
+# Ferry summary (by time period, weekday/weekend)
+ferry_summary_period <- ferry %>%
+  group_by(time_period) %>%
+  summarize(
+    total = sum(boardings, na.rm = TRUE)) %>%
+  mutate(mode = "Ferry")
+
+ferry_summary_weektype <- ferry %>%
+  group_by(is_weekend) %>%
+  summarize(
+    total = sum(boardings, na.rm = TRUE) ) %>%
+  mutate(mode = "Ferry")
+
+#Average ridership per ferry landing by time period
+ferry_avg_by_period <- ferry %>%
+  group_by(stop, time_period) %>%
+  summarise(total = sum(boardings, na.rm = TRUE)) %>%
+  ungroup() %>%
+  group_by(time_period) %>%
+  summarise(avg_ferry = mean(total))
+
+#Average ridership per ferry landing by commute vs non-commute
+ferry_avg_commute <- ferry %>%
+  group_by(stop, commute_type) %>%
+  summarise(total = sum(boardings, na.rm = TRUE)) %>%
+  ungroup() %>%
+  group_by(commute_type) %>%
+  summarise(avg_ferry = mean(total))
+
+# Subway summary (by time period, weekday/weekend)
+subway_summary_period <- subway %>%
+  group_by(time_period) %>%
+  summarize(
+    total = sum(ridership, na.rm = TRUE) ) %>%
+  mutate(mode = "Subway")
+
+subway_summary_weektype <- subway %>%
+  group_by(is_weekend) %>%
+  summarize(
+    total = sum(ridership, na.rm = TRUE)) %>%
+  mutate(mode = "Subway")
+
+#Average ridership per subway station by time period
+  #per station, per period totals
+subway_period_station_totals <- subway %>%
+  group_by(station_complex_id, time_period) %>%
+  summarize(total = sum(ridership, na.rm = TRUE))
+  
+  #avg across stations
+subway_avg_by_period <- subway_period_station_totals %>%
+  group_by(time_period) %>%
+  summarize(avg_subway = mean(total))
+
+#Average ridership per subway station by commute vs non-commute
+  #per station totals
+subway_commute_station_totals <- subway %>%
+  group_by(station_complex_id, commute_type) %>%
+  summarize(total = sum(ridership, na.rm = TRUE))
+  
+  #avg across stations
+subway_avg_commute <- subway_commute_station_totals %>%
+  group_by(commute_type) %>%
+  summarize(avg_subway = mean(total))
+
+#Combine Ferry + Subway for Comparison Charts
+  #time period comparison table 
+comparison_period <- ferry_avg_by_period %>%
+  left_join(subway_avg_by_period, by = "time_period") %>%
+  pivot_longer(cols = c(avg_ferry, avg_subway),
+               names_to = "mode",
+               values_to = "avg_ridership")
+
+  #commute vs non-commute table
+comparison_commute <- ferry_avg_commute %>%
+  left_join(subway_avg_commute, by = "commute_type") %>%
+  pivot_longer(cols = c(avg_ferry, avg_subway),
+               names_to = "mode",
+               values_to = "avg_ridership")
+
+#Plot: Average Ridership per Location by Time of Day
+ggplot(comparison_period,
+       aes(x = time_period, y = avg_ridership, fill = mode)) +
+  geom_col(position = "dodge") +
+  labs(
+    title = "Average Ridership per Landing/Station by Time of Day",
+    x = "Time Period",
+    y = "Average Ridership",
+    fill = "Mode"
+  ) +
+  theme_minimal()
+
+#Plot: Average Ridership per Location (Commute vs Non-commute)
+ggplot(comparison_commute,
+       aes(x = commute_type, y = avg_ridership, fill = mode)) +
+  geom_col(position = "dodge") +
+  labs(
+    title = "Average Ridership per Landing/Station: Commute vs Non-Commute",
+    x = "",
+    y = "Average Ridership"
+  ) +
+  theme_minimal()
+
+
+#Combining summaries 
+summary_period_combined <- bind_rows(
+  ferry_summary_period,
+  subway_summary_period)
+
+summary_weektype_combined <- bind_rows(
+  ferry_summary_weektype,
+  subway_summary_weektype)
+
+
+#Summarize subway ridership in ferry neighborhoods
+subway_total_near_ferry <- subway %>%
+  summarize(total = sum(ridership, na.rm = TRUE)) %>%
+  mutate(mode = "Subway (near ferry)")
+
+#Summarize ferry ridership by landing
+ferry_by_landing <- ferry %>%
+  group_by(stop) %>%      # or `landing` depending on your column name
+  summarise(
+    ferry_total = sum(boardings, na.rm = TRUE),
+    ferry_commute = sum(boardings[commute_type == "Commute"], na.rm = TRUE),
+    ferry_noncommute = sum(boardings[commute_type == "Non-commute"], na.rm = TRUE),
+    .groups = "drop"
+  )
+
+#----------------
+
