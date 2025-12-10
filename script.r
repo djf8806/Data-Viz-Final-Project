@@ -242,6 +242,9 @@ comparison_period <- ferry_avg_by_period %>%
                names_to = "mode",
                values_to = "avg_ridership")
 
+#Save as CSV
+write_csv(comparison_period, "r_output/average_ridership_comparison.csv")
+
   #commute vs non-commute table
 comparison_commute <- ferry_avg_commute %>%
   left_join(subway_avg_commute, by = "commute_type") %>%
