@@ -3,6 +3,9 @@ library(janitor)
 library(lehdr)
 library(tidycensus)
 library(sf)
+library(lubridate)
+library(scales)
+library(ggplot2)
 
 # Download LODES data (origin-destination) for New York
 lodes <- grab_lodes(
@@ -55,8 +58,6 @@ census_lodes <- lodes_tracts %>%
 st_write(census_lodes, "r_output/census_lodes.shp")
 
 ## ---------------------------------------------------------------
-  
-library(lubridate)
 
 # clean ferry ridership data 
 ferry <- read_csv("r_data/NYC_Ferry_Ridership_2022.csv") %>% 
@@ -271,8 +272,7 @@ comparison_period <- ferry_avg_by_period %>%
     time_period == "Evening" ~ 4,
     time_period == "Overnight" ~ 7
     ),
-    avg_hourly_ridership = avg_ridership/hrs
-  )
+    avg_hourly_ridership = avg_ridership/hrs)
 
 #Save as CSV
 write_csv(comparison_period, "r_output/average_ridership_comparison.csv")
@@ -286,34 +286,88 @@ comparison_commute <- ferry_avg_commute %>%
   mutate(
     hrs = case_when(
       commute_type == "Commute" ~ 7,
-      commute_type == "Non-commute" ~ 17
-      ),
-    avg_hourly_ridership = avg_ridership/hrs
-  )
+      commute_type == "Non-commute" ~ 17 ),
+    avg_hourly_ridership = avg_ridership/hrs)
 
-#Plot: Average Ridership per Location by Time of Day
-ggplot(comparison_period,
-       aes(x = time_period, y = avg_hourly_ridership, fill = mode)) +
-  geom_col(position = "dodge") +
-  labs(
-    title = "Average Ridership per Landing/Station by Time of Day",
-    x = "Time Period",
-    y = "Average Ridership",
-    fill = "Mode"
+
+comparison_period_fixed <- comparison_period %>%
+  mutate(
+    # put time periods in logical order
+    time_period = factor(
+      time_period,
+      levels = c("AM peak", "Midday", "PM peak", "Evening", "Overnight")),
+    # turn ugly codes into nice labels
+    mode = recode(
+      mode,
+      "avg_ferry"  = "Ferry",
+      "avg_subway" = "Subway" ))
+
+
+ggplot(comparison_period_fixed,
+       aes(x = time_period,
+           y = avg_hourly_ridership,
+           fill = mode)) +
+  
+  geom_col(position = position_dodge(width = 0.75), width = 0.65) +
+  
+  geom_text(
+    aes(label = comma(round(avg_hourly_ridership))),
+    position = position_dodge(width = 0.75),
+    vjust = -0.25,
+    size = 3,
+    color = "black"
   ) +
-  theme_minimal()+
-  scale_y_continuous()
-
-#Plot: Average Ridership per Location (Commute vs Non-commute)
-ggplot(comparison_commute,
-       aes(x = commute_type, y = avg_hourly_ridership, fill = mode)) +
-  geom_col(position = "dodge") +
+  
+  # --- COLOR PALETTE ---
+  scale_fill_manual(
+    values = c(
+      "Ferry" = "#AD1AAC",   # Rockaway Ferry magenta/purple
+      "Subway" = "#0039A6"   # MTA blue
+    ) ) +
+  
+  scale_y_continuous(
+    labels = comma,
+    expand = expansion(mult = c(0, 0.15)) ) +
+  
   labs(
-    title = "Average Ridership per Landing/Station: Commute vs Non-Commute",
+    title = "Average Hourly Ridership for 
+    Subway Stations and Ferry Landings",
+    subtitle = "Ferries attract little commuter traffic compared with nearby 
+    subway stations, underscoring their limited role in peak-hour travel.",
     x = "",
-    y = "Average Ridership"
-  ) +
-  theme_minimal()
+    y = "Average hourly ridership",
+    fill = NULL,
+    caption = "Sources: NYC Ferry Ridership (2022); MTA Subway Hourly Ridership (2022)"
+    ) +
+  
+  theme_minimal(base_size = 14) +
+  theme(
+    # remove gridlines
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    
+    # thinner, lighter axis lines + ticks
+    axis.line.x = element_line(color = "gray60", linewidth = 0.3),
+    axis.line.y = element_line(color = "gray60", linewidth = 0.3),
+    axis.ticks = element_line(color = "gray60", linewidth = 0.3),
+    axis.ticks.length = unit(0.12, "cm"),
+    
+    # black text everywhere
+    text = element_text(color = "black"),
+    axis.title = element_text(color = "black"),
+    axis.text = element_text(color = "black"),
+    plot.title = element_text(color = "black", face = "bold"),
+    plot.subtitle = element_text(color = "black"),
+    
+    # legend at bottom, left-aligned
+    legend.position = "bottom",
+    legend.justification = "left",
+    legend.text = element_text(size = 12, color = "black"),
+    
+    # more space so nothing feels cramped
+    plot.margin = margin(t = 20, r = 20, b = 15, l = 20) )
+
+
 
 
 #Combining summaries 
