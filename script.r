@@ -136,11 +136,11 @@ mutate(
 subway <- subway %>%
   mutate(
     time_period = case_when(
-      hour >= 6  & hour < 10 ~ "AM peak",
-      hour >= 16 & hour < 19 ~ "PM peak",
-      hour >= 10 & hour < 16 ~ "Midday",
-      hour >= 19 & hour < 23 ~ "Evening",
-      TRUE                  ~ "Overnight" ),
+      hour >= 6  & hour < 10 ~ "AM peak", #4 hrs
+      hour >= 16 & hour < 19 ~ "PM peak", #3 hrs
+      hour >= 10 & hour < 16 ~ "Midday", #6
+      hour >= 19 & hour < 23 ~ "Evening", #4 hrs
+      TRUE                  ~ "Overnight" ), #7 hrs
     commute_period = time_period %in% c("AM peak", "PM peak"),
     commute_type = if_else(!is_weekend & commute_period,
                            "Commute", "Non-commute") )
@@ -240,7 +240,17 @@ comparison_period <- ferry_avg_by_period %>%
   left_join(subway_avg_by_period, by = "time_period") %>%
   pivot_longer(cols = c(avg_ferry, avg_subway),
                names_to = "mode",
-               values_to = "avg_ridership")
+               values_to = "avg_ridership") %>% 
+  mutate(
+    hrs = case_when(
+    time_period == "AM peak" ~ 4,
+    time_period == "PM peak" ~ 3,
+    time_period == "Midday" ~ 6,
+    time_period == "Evening" ~ 4,
+    time_period == "Overnight" ~ 7
+    ),
+    avg_hourly_ridership = avg_ridership/hrs
+  )
 
 #Save as CSV
 write_csv(comparison_period, "r_output/average_ridership_comparison.csv")
@@ -250,11 +260,18 @@ comparison_commute <- ferry_avg_commute %>%
   left_join(subway_avg_commute, by = "commute_type") %>%
   pivot_longer(cols = c(avg_ferry, avg_subway),
                names_to = "mode",
-               values_to = "avg_ridership")
+               values_to = "avg_ridership") %>% 
+  mutate(
+    hrs = case_when(
+      commute_type == "Commute" ~ 7,
+      commute_type == "Non-commute" ~ 17
+      ),
+    avg_hourly_ridership = avg_ridership/hrs
+  )
 
 #Plot: Average Ridership per Location by Time of Day
 ggplot(comparison_period,
-       aes(x = time_period, y = avg_ridership, fill = mode)) +
+       aes(x = time_period, y = avg_hourly_ridership, fill = mode)) +
   geom_col(position = "dodge") +
   labs(
     title = "Average Ridership per Landing/Station by Time of Day",
@@ -262,11 +279,12 @@ ggplot(comparison_period,
     y = "Average Ridership",
     fill = "Mode"
   ) +
-  theme_minimal()
+  theme_minimal()+
+  scale_y_continuous()
 
 #Plot: Average Ridership per Location (Commute vs Non-commute)
 ggplot(comparison_commute,
-       aes(x = commute_type, y = avg_ridership, fill = mode)) +
+       aes(x = commute_type, y = avg_hourly_ridership, fill = mode)) +
   geom_col(position = "dodge") +
   labs(
     title = "Average Ridership per Landing/Station: Commute vs Non-Commute",
