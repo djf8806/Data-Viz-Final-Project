@@ -455,7 +455,7 @@ lodes_by_landing_clean <- lodes_by_landing %>%
   ) %>%
   select(stop, residents_15m, workers_15m, population_15m, hh_income)
 
-
+# Summary table of ferry ridership and LODES data
 landing_summary <- ferry_totals %>%
   left_join(ferry_hourly_wide, by = "stop") %>%
   left_join(lodes_by_landing_clean, by = "stop") %>%
@@ -464,18 +464,19 @@ landing_summary <- ferry_totals %>%
     weekend_share        = weekend_boardings / total_boardings,
     peak_hourly          = pmax(hourly_am_peak, hourly_pm_peak, na.rm = TRUE),
     midday_hourly        = hourly_midday,
-    peak_to_midday_ratio = peak_hourly / midday_hourly
+    am_to_pm_ratio = hourly_am_peak / hourly_pm_peak
   )
 
 
 write_csv(landing_summary, "r_output/landing_level_summary_2022.csv")
 
-landing_summary %>%
+# Concise summary table
+landing_summary_for_slides <- landing_summary %>%
   select(
     stop,
     total_boardings,
     hourly_am_peak,
-    hourly_midday,
+    hourly_pm_peak,
     commute_share,
     workers_15m
   ) %>%
